@@ -6,6 +6,7 @@ import com.thenovels.TheNovels.model.Product;
 import com.thenovels.TheNovels.repository.CategoryRepository;
 import com.thenovels.TheNovels.repository.ProductRepository;
 import com.thenovels.TheNovels.request.AddProductRequest;
+import com.thenovels.TheNovels.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +57,22 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void updateProduct(Product product, Long product_id) {
+    public Product updateProduct(ProductUpdateRequest request, Long product_id) {
+        return productRepository.findById(product_id)
+                .map(existingProduct -> updateExistingProduct(existingProduct, request))
+                .map(productRepository :: save)
+                .orElseThrow(()-> new ProductNotFoundException("Product Not Found!"));
+    }
 
+    private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request) {
+        existingProduct.setName(request.getName());
+        existingProduct.setDescription(request.getDescription());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setInventory(request.getInventory());
+
+        Category category = categoryRepository.findByName(request.getCategory().getName());
+        existingProduct.setCategory(category);
+        return existingProduct;
     }
 
     @Override
