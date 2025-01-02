@@ -16,4 +16,5 @@ public class AddProductRequest {
     private BigDecimal price;
     private int inventory;
     private Category category;
+
 }
