@@ -29,5 +29,6 @@ public class Image {
     private Product product;
 
     public void setFileType(String originalFilename) {
+
     }
 }
