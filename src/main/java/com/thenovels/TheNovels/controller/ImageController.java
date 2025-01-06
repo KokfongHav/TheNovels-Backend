@@ -47,18 +47,31 @@ public class ImageController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"").body(resource);
     }
 
-    @PostMapping("/image/{imageId}/update")
+    @PutMapping("/image/{imageId}/update")
     public ResponseEntity<ApiResponse> updateImage(@PathVariable Long imageId, @RequestBody MultipartFile file) {
-
         try {
             Image image = imageService.getImageById(imageId);
             if (image != null) {
                 imageService.updateImage(file, imageId);
-                return ResponseEntity.ok(new ApiResponse("Updated Succeed!", null));
+                return ResponseEntity.ok(new ApiResponse("Update Success!", null));
             }
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update failed!", INTERNAL_SERVER_ERROR));
+    }
+
+    @DeleteMapping("/image/{imageId}/delete")
+    public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId) {
+        try {
+            Image image = imageService.getImageById(imageId);
+            if (image != null) {
+                imageService.deleteImageById(imageId);
+                return ResponseEntity.ok(new ApiResponse("Delete Success!", null));
+            }
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Delete failed!", INTERNAL_SERVER_ERROR));
     }
 }
