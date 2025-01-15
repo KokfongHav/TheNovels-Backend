@@ -1,6 +1,7 @@
 package com.thenovels.TheNovels.service.product;
 
 import com.thenovels.TheNovels.exception.ProductNotFoundException;
+import com.thenovels.TheNovels.exception.ResourceNotFoundException;
 import com.thenovels.TheNovels.model.Category;
 import com.thenovels.TheNovels.model.Product;
 import com.thenovels.TheNovels.repository.CategoryRepository;
@@ -45,7 +46,7 @@ public class ProductService implements IProductService {
     public Product getProductById(Long id) {
         return productRepository
                 .findById(id)
-                .orElseThrow(()-> new ProductNotFoundException("Product not found!"));
+                .orElseThrow(()-> new ResourceNotFoundException("Product not found!"));
     }
 
     @Override
@@ -53,7 +54,7 @@ public class ProductService implements IProductService {
         productRepository
                 .findById(id)
                 .ifPresentOrElse(productRepository::delete,
-                ()-> {throw new ProductNotFoundException("Product not found");});
+                ()-> {throw new ResourceNotFoundException("Product not found");});
     }
 
     @Override
@@ -61,7 +62,7 @@ public class ProductService implements IProductService {
         return productRepository.findById(product_id)
                 .map(existingProduct -> updateExistingProduct(existingProduct, request))
                 .map(productRepository :: save)
-                .orElseThrow(()-> new ProductNotFoundException("Product Not Found!"));
+                .orElseThrow(()-> new ResourceNotFoundException("Product Not Found!"));
     }
 
     private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request) {
