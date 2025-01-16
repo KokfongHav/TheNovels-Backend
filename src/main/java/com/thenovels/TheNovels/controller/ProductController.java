@@ -31,7 +31,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("product/{productId/product")
+    @GetMapping("product/{productId}/product")
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
         try {
             Product product = iProductService.getProductById(productId);
@@ -108,6 +108,16 @@ public class ProductController {
             return ResponseEntity.ok(new ApiResponse("success", products));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error", null));
+        }
+    }
+
+    @GetMapping("/product/count/by-brand/by-name")
+    public ResponseEntity<ApiResponse> countProductsByBrandAndName(@RequestParam String brand, @RequestParam String name){
+        try {
+            var productCount = iProductService.countProductsByBrandAndName(brand, name);
+            return ResponseEntity.ok(new ApiResponse("Product Count", productCount));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
         }
     }
 }
